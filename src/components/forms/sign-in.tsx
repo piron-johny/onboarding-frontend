@@ -6,8 +6,13 @@ import {
   Stack,
   Button,
 } from '@chakra-ui/react'
+import { FC } from 'react'
 
-export const SignIn = () => {
+interface SignInProps {
+  handleLogin: () => void
+}
+
+export const SignIn: FC<SignInProps> = ({ handleLogin }) => {
   return (
     <Flex>
       <Stack spacing={4} w={'full'}>
@@ -26,6 +31,7 @@ export const SignIn = () => {
             _hover={{
               bg: 'blue.500',
             }}
+            onClick={handleLogin}
           >
             Sign in
           </Button>

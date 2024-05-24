@@ -10,8 +10,10 @@ import {
 } from '@chakra-ui/react'
 import { ModalWindow } from '../modals'
 import { SignIn, SignUp } from '../forms'
+import { useAuth } from '../../providers'
 
 export const NavBar = () => {
+  const { login, logout, isAuthenticated } = useAuth()
   const {
     isOpen: isOpenSignIn,
     onOpen: onOpenSignIn,
@@ -26,6 +28,15 @@ export const NavBar = () => {
   const onPressLoginLink = () => {
     onCloseSignUp()
     setTimeout(onOpenSignIn, 300)
+  }
+
+  const handleLogin = () => {
+    login('1233')
+    onCloseSignIn()
+  }
+
+  const handleLogout = () => {
+    logout()
   }
 
   return (
@@ -53,34 +64,53 @@ export const NavBar = () => {
             </Text>
           </Flex>
 
-          <Stack
-            flex={{ base: 1, md: 0 }}
-            justify={'flex-end'}
-            direction={'row'}
-            spacing={6}
-          >
-            <Button
-              fontSize={'sm'}
-              fontWeight={400}
-              variant={'link'}
-              onClick={onOpenSignIn}
+          {isAuthenticated ? (
+            <Stack
+              flex={{ base: 1, md: 0 }}
+              justify={'flex-end'}
+              direction={'row'}
+              spacing={6}
             >
-              Sign In
-            </Button>
-            <Button
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              color={'white'}
-              bg={'pink.400'}
-              _hover={{
-                bg: 'pink.300',
-              }}
-              onClick={onOpenSignUp}
+              <Button
+                display={{ base: 'none', md: 'inline-flex' }}
+                fontSize={'sm'}
+                fontWeight={600}
+                variant={'link'}
+                onClick={handleLogout}
+              >
+                Log Out
+              </Button>
+            </Stack>
+          ) : (
+            <Stack
+              flex={{ base: 1, md: 0 }}
+              justify={'flex-end'}
+              direction={'row'}
+              spacing={6}
             >
-              Sign Up
-            </Button>
-          </Stack>
+              <Button
+                fontSize={'sm'}
+                fontWeight={600}
+                variant={'link'}
+                onClick={onOpenSignIn}
+              >
+                Sign In
+              </Button>
+              <Button
+                display={{ base: 'none', md: 'inline-flex' }}
+                fontSize={'sm'}
+                fontWeight={600}
+                color={'white'}
+                bg={'blue.400'}
+                _hover={{
+                  bg: 'blue.300',
+                }}
+                onClick={onOpenSignUp}
+              >
+                Sign Up
+              </Button>
+            </Stack>
+          )}
         </Flex>
       </Box>
 
@@ -89,7 +119,7 @@ export const NavBar = () => {
         onClose={onCloseSignIn}
         title={'Sign In'}
       >
-        <SignIn />
+        <SignIn handleLogin={handleLogin} />
       </ModalWindow>
       <ModalWindow
         isOpen={isOpenSignUp}
