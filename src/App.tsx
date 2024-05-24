@@ -1,7 +1,12 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
+import { NavBar } from './components/nav-bar'
 
 function App() {
-  return <Box></Box>
+  return (
+    <Box>
+      <NavBar />
+    </Box>
+  )
 }
 
 export default App
