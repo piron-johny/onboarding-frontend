@@ -11,6 +11,9 @@ import {
 import { ModalWindow } from '../modals'
 import { SignIn, SignUp } from '../forms'
 import { useAuth } from '../../providers'
+import { useMutation } from '@tanstack/react-query'
+import httpService from '../../services/http'
+import { CreateUserDto } from '../../types'
 
 export const NavBar = () => {
   const { login, logout, isAuthenticated } = useAuth()
@@ -24,15 +27,34 @@ export const NavBar = () => {
     onOpen: onOpenSignUp,
     onClose: onCloseSignUp,
   } = useDisclosure()
+  const {
+    mutate: signUp,
+    isPending: isPendingSignUp,
+    error: errorSignUp,
+  } = useMutation({
+    mutationFn: async (user: CreateUserDto) => httpService.signUp(user),
+    mutationKey: ['SIGN_UP'],
+    onSuccess(data) {
+      onCloseSignUp()
+      login(data.token)
+    },
+  })
+  const {
+    mutate: signIn,
+    isPending: isPendingSignIn,
+    error: errorSignIn,
+  } = useMutation({
+    mutationFn: async (user: CreateUserDto) => httpService.signIn(user),
+    mutationKey: ['SIGN_IN'],
+    onSuccess(data) {
+      onCloseSignIn()
+      login(data.token)
+    },
+  })
 
   const onPressLoginLink = () => {
     onCloseSignUp()
     setTimeout(onOpenSignIn, 300)
-  }
-
-  const handleLogin = () => {
-    login('1233')
-    onCloseSignIn()
   }
 
   const handleLogout = () => {
@@ -119,14 +141,23 @@ export const NavBar = () => {
         onClose={onCloseSignIn}
         title={'Sign In'}
       >
-        <SignIn handleLogin={handleLogin} />
+        <SignIn
+          onSubmit={signIn}
+          isPending={isPendingSignIn}
+          error={errorSignIn}
+        />
       </ModalWindow>
       <ModalWindow
         isOpen={isOpenSignUp}
         onClose={onCloseSignUp}
         title={'Sign Up'}
       >
-        <SignUp onLogin={onPressLoginLink} />
+        <SignUp
+          onLogin={onPressLoginLink}
+          onSubmit={signUp}
+          isPending={isPendingSignUp}
+          error={errorSignUp}
+        />
       </ModalWindow>
     </>
   )
