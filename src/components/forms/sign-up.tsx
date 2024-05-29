@@ -10,8 +10,8 @@ import {
   Text,
   Link,
   Spinner,
-  FormHelperText,
   FormErrorMessage,
+  FormHelperText,
 } from '@chakra-ui/react'
 import { FC, useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
@@ -54,19 +54,18 @@ export const SignUp: FC<SignUpProps> = ({
     <Flex>
       <Stack spacing={8} w={'full'}>
         <Stack spacing={4}>
-          <FormControl id='name' w={'100%'} isInvalid={name === ''}>
+          <FormControl id='name' w={'100%'}>
             <FormLabel>Name</FormLabel>
             <Input
               type='text'
+              placeholder='Name'
               value={name}
               onChange={e => setName(e.target.value)}
               disabled={isPending}
             />
-            {name === '' && (
-              <FormErrorMessage>
-                The name must be longer than 1 character.
-              </FormErrorMessage>
-            )}
+            <FormHelperText>
+              The name must be longer than 1 character.
+            </FormHelperText>
           </FormControl>
           <FormControl
             id='password1'
@@ -77,6 +76,7 @@ export const SignUp: FC<SignUpProps> = ({
             <InputGroup>
               <Input
                 type={showPassword ? 'text' : 'password'}
+                placeholder='Password'
                 value={password1}
                 onChange={e => setPassword1(e.target.value)}
                 disabled={isPending}
@@ -103,6 +103,7 @@ export const SignUp: FC<SignUpProps> = ({
             <InputGroup>
               <Input
                 type={showPassword ? 'text' : 'password'}
+                placeholder='Confirm password'
                 value={password2}
                 onChange={e => setPassword2(e.target.value)}
                 disabled={isPending}
@@ -144,7 +145,11 @@ export const SignUp: FC<SignUpProps> = ({
             </Text>
           </Stack>
         </Stack>
-        {error && <Text>{error.message}</Text>}
+        {error && (
+          <Text color={'red.500'} textAlign={'center'}>
+            {error.message}
+          </Text>
+        )}
       </Stack>
     </Flex>
   )

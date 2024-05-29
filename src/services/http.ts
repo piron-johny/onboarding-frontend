@@ -1,10 +1,12 @@
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios'
-import { CreateUserDto, CreateUserResponse } from '../types'
+import axios, { AxiosError, AxiosInstance } from 'axios'
+import {
+  CreateUserDto,
+  CreateUserResponse,
+  Image,
+  ResponseMessage,
+  UploadImageDto,
+} from '../types'
+import { STORAGE_TOKEN } from '../constants'
 
 class HttpService {
   private instance: AxiosInstance
@@ -17,7 +19,7 @@ class HttpService {
   private setupInterceptors() {
     this.instance.interceptors.request.use(
       config => {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem(STORAGE_TOKEN)
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
@@ -55,6 +57,28 @@ class HttpService {
     }
   }
 
+  async getUserImages() {
+    try {
+      const response = await this.instance.get<Image[]>('/image')
+      return response.data
+    } catch (error) {
+      this.handleError(error)
+      throw error
+    }
+  }
+  async upload(data: UploadImageDto) {
+    try {
+      const response = await this.instance.post<ResponseMessage>(
+        '/image/upload',
+        data,
+      )
+      return response.data
+    } catch (error) {
+      this.handleError(error)
+      throw error
+    }
+  }
+
   private handleError(error: unknown) {
     if (error instanceof AxiosError) {
       if (error.response) {
@@ -67,6 +91,9 @@ class HttpService {
   }
 }
 
-const httpService = new HttpService('http://localhost:4000/dev')
+// const httpService = new HttpService('http://localhost:4000/dev')
+const httpService = new HttpService(
+  'https://7evbr33441.execute-api.us-east-1.amazonaws.com/dev',
+)
 
 export default httpService

@@ -1,16 +1,28 @@
 import {
   Box,
   Center,
-  Heading,
   Text,
   Stack,
   useColorModeValue,
   Img,
 } from '@chakra-ui/react'
+import { FC } from 'react'
 
-export const ImageItem = () => {
+interface ImageItemProps {
+  id: string
+  url: string
+  name: string
+  description: string
+}
+
+export const ImageItem: FC<ImageItemProps> = ({
+  id,
+  name,
+  url,
+  description,
+}) => {
   return (
-    <Center flexGrow={1} flexBasis={'250px'}>
+    <Center flexGrow={1} flexBasis={'250px'} position={'relative'}>
       <Box
         bg={useColorModeValue('white', 'gray.900')}
         flexDir={'column'}
@@ -30,14 +42,7 @@ export const ImageItem = () => {
           mb={6}
           pos={'relative'}
         >
-          <Img
-            src={
-              'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-            }
-            objectFit='cover'
-            h='full'
-            w='full'
-          />
+          <Img src={url} objectFit='cover' h='full' w='full' loading='eager' />
         </Box>
         <Stack>
           <Text
@@ -47,13 +52,10 @@ export const ImageItem = () => {
             noOfLines={1}
             fontWeight={500}
           >
-            Boost your conversion rate
+            {name}
           </Text>
           <Text color={'gray.500'} lineHeight={1.1} noOfLines={4}>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore. nonumy eirmod
-            tempor invidunt ut labore et dolore. nonumy eirmod tempor invidunt
-            ut labore et dolore.
+            {description}
           </Text>
         </Stack>
       </Box>
