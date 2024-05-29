@@ -16,3 +16,8 @@ export interface UploadImageDto {
   description: string
   imageData: ImageData
 }
+
+export interface RemoveImageDto {
+  url: string
+  imageId: string
+}

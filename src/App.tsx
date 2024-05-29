@@ -1,19 +1,24 @@
-import { Box, Flex, Spinner, Text } from '@chakra-ui/react'
+import { Box, Flex, Spinner, Text, useToast } from '@chakra-ui/react'
 import { NavBar } from './components/nav-bar'
 import { ImageItem } from './components/image-item'
 import { useAuth } from './providers'
-import { useQuery } from '@tanstack/react-query'
-import httpService from './services/http'
+import { useGetImages } from './hooks/queries'
 
 function App() {
   const { isAuthenticated } = useAuth()
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['GET_ALL_USER_IMAGE'],
-    queryFn: async () => httpService.getUserImages(),
-    enabled: isAuthenticated,
-    retry: 1,
-    refetchOnWindowFocus: false,
+  const toast = useToast()
+  const { data, isLoading, error } = useGetImages({
+    isAuthenticated,
   })
+
+  if (error) {
+    toast({
+      title: 'Something went wrong',
+      description: error.message,
+      status: 'error',
+      duration: 2000,
+    })
+  }
 
   return (
     <Box>
@@ -33,14 +38,22 @@ function App() {
               <Flex alignItems={'center'} justifyContent={'center'} w={'full'}>
                 <Spinner size={'xl'} />
               </Flex>
-            ) : data?.length === 0 ? (
-              <Flex alignItems={'center'} justifyContent={'center'} w={'full'}>
-                <Text textAlign={'center'} fontSize={'xl'}>
-                  You don't have any uploaded images.
-                </Text>
-              </Flex>
             ) : (
-              data?.map(image => <ImageItem key={image.id} {...image} />)
+              <>
+                {data?.length === 0 ? (
+                  <Flex
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    w={'full'}
+                  >
+                    <Text textAlign={'center'} fontSize={'xl'}>
+                      You don't have any uploaded images.
+                    </Text>
+                  </Flex>
+                ) : (
+                  data?.map(image => <ImageItem key={image.id} {...image} />)
+                )}
+              </>
             )}
           </>
         ) : (

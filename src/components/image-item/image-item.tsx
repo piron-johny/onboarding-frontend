@@ -5,8 +5,14 @@ import {
   Stack,
   useColorModeValue,
   Img,
+  Button,
+  Spinner,
 } from '@chakra-ui/react'
+import { DeleteIcon } from '@chakra-ui/icons'
 import { FC } from 'react'
+import { useRemoveImage } from '../../hooks/queries'
+import { useQueryClient } from '@tanstack/react-query'
+import { GET_ALL_USER_IMAGE } from '../../constants'
 
 interface ImageItemProps {
   id: string
@@ -21,8 +27,31 @@ export const ImageItem: FC<ImageItemProps> = ({
   url,
   description,
 }) => {
+  const queryClient = useQueryClient()
+  const { isPendingRemoveImage, removeImage } = useRemoveImage({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [GET_ALL_USER_IMAGE] })
+    },
+  })
+
   return (
     <Center flexGrow={1} flexBasis={'250px'} position={'relative'}>
+      <Button
+        onClick={() => removeImage({ imageId: id, url })}
+        bg={'blue.400'}
+        _hover={{
+          bg: 'blue.300',
+        }}
+        color={'white'}
+        w='fit-content'
+        position={'absolute'}
+        top={3}
+        right={3}
+        zIndex={2}
+        px={2}
+      >
+        {isPendingRemoveImage ? <Spinner /> : <DeleteIcon w={5} h={5} />}
+      </Button>
       <Box
         bg={useColorModeValue('white', 'gray.900')}
         flexDir={'column'}

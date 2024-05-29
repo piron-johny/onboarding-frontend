@@ -3,6 +3,7 @@ import {
   CreateUserDto,
   CreateUserResponse,
   Image,
+  RemoveImageDto,
   ResponseMessage,
   UploadImageDto,
 } from '../types'
@@ -66,11 +67,25 @@ class HttpService {
       throw error
     }
   }
+
   async upload(data: UploadImageDto) {
     try {
       const response = await this.instance.post<ResponseMessage>(
         '/image/upload',
         data,
+      )
+      return response.data
+    } catch (error) {
+      this.handleError(error)
+      throw error
+    }
+  }
+
+  async removeImage(data: RemoveImageDto) {
+    try {
+      const response = await this.instance.delete<ResponseMessage>(
+        '/image/remove',
+        { data },
       )
       return response.data
     } catch (error) {

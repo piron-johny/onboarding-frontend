@@ -11,9 +11,9 @@ import {
 import { ModalWindow } from '../modals'
 import { SignIn, SignUp, Upload } from '../forms'
 import { useAuth } from '../../providers'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import httpService from '../../services/http'
-import { CreateUserDto, UploadImageDto } from '../../types'
+import { useQueryClient } from '@tanstack/react-query'
+import { useSignIn, useSignUp, useUpload } from '../../hooks/queries'
+import { GET_ALL_USER_IMAGE } from '../../constants'
 
 export const NavBar = () => {
   const queryClient = useQueryClient()
@@ -33,39 +33,22 @@ export const NavBar = () => {
     onOpen: onOpenUpload,
     onClose: onCloseUpload,
   } = useDisclosure()
-  const {
-    mutate: signUp,
-    isPending: isPendingSignUp,
-    error: errorSignUp,
-  } = useMutation({
-    mutationFn: async (user: CreateUserDto) => httpService.signUp(user),
-    mutationKey: ['SIGN_UP'],
-    onSuccess(data) {
-      onCloseSignUp()
-      login(data.token)
-    },
-  })
-  const {
-    mutate: signIn,
-    isPending: isPendingSignIn,
-    error: errorSignIn,
-  } = useMutation({
-    mutationFn: async (user: CreateUserDto) => httpService.signIn(user),
-    mutationKey: ['SIGN_IN'],
-    onSuccess(data) {
+
+  const { errorSignIn, isPendingSignIn, signIn } = useSignIn({
+    onSuccess: data => {
       onCloseSignIn()
       login(data.token)
     },
   })
-  const {
-    mutate: upload,
-    isPending: isPendingUpload,
-    error: errorUpload,
-  } = useMutation({
-    mutationFn: async (data: UploadImageDto) => httpService.upload(data),
-    mutationKey: ['UPLOAD'],
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ['GET_ALL_USER_IMAGE'] })
+  const { errorSignUp, isPendingSignUp, signUp } = useSignUp({
+    onSuccess: data => {
+      onCloseSignUp()
+      login(data.token)
+    },
+  })
+  const { upload, isPendingUpload, errorUpload } = useUpload({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [GET_ALL_USER_IMAGE] })
       onCloseUpload()
     },
   })
