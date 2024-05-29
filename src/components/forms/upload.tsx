@@ -22,14 +22,8 @@ interface SignInProps {
 export const Upload: FC<SignInProps> = ({ onSubmit, isPending, error }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [image, setImage] = useState<File | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setImage(e.target.files[0])
-    }
-  }
   const handleClick = () => inputRef.current?.click()
 
   const handleSubmit = () => {
@@ -86,7 +80,6 @@ export const Upload: FC<SignInProps> = ({ onSubmit, isPending, error }) => {
               bg={'red'}
               accept='image/*'
               ref={inputRef}
-              onChange={handleImageChange}
             />
             <Stack w={'full'}>
               <Button w={'full'}>
