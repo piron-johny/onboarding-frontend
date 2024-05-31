@@ -106,9 +106,10 @@ class HttpService {
   }
 }
 
-// const httpService = new HttpService('http://localhost:4000/dev')
 const httpService = new HttpService(
-  'https://7evbr33441.execute-api.us-east-1.amazonaws.com/dev',
+  import.meta.env.DEV
+    ? 'http://localhost:4000/dev'
+    : 'https://7evbr33441.execute-api.us-east-1.amazonaws.com/dev',
 )
 
 export default httpService

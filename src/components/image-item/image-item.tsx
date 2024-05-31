@@ -18,6 +18,7 @@ interface ImageItemProps {
   id: string
   url: string
   name: string
+  imageKey: string
   description: string
 }
 
@@ -25,6 +26,7 @@ export const ImageItem: FC<ImageItemProps> = ({
   id,
   name,
   url,
+  imageKey,
   description,
 }) => {
   const queryClient = useQueryClient()
@@ -37,7 +39,7 @@ export const ImageItem: FC<ImageItemProps> = ({
   return (
     <Center flexGrow={1} flexBasis={'250px'} position={'relative'}>
       <Button
-        onClick={() => removeImage({ imageId: id, url })}
+        onClick={() => removeImage({ imageId: id, imageKey })}
         bg={'blue.400'}
         _hover={{
           bg: 'blue.300',

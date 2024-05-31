@@ -3,6 +3,7 @@ export interface Image {
   url: string
   userId: string
   name: string
+  imageKey: string
   description: string
 }
 
@@ -18,6 +19,6 @@ export interface UploadImageDto {
 }
 
 export interface RemoveImageDto {
-  url: string
+  imageKey: string
   imageId: string
 }
